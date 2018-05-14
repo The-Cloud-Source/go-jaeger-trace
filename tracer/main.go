@@ -12,6 +12,9 @@ import (
 
 // New returns a new tracer
 func New(serviceName, hostPort string) (opentracing.Tracer, io.Closer) {
+
+	zipkinPropagator := jaeger.NewCombinedB3HTTPHeaderPropagator()
+
 	cfg := config.Configuration{
 		Sampler: &config.SamplerConfig{
 			Type:  "const",
@@ -26,6 +29,9 @@ func New(serviceName, hostPort string) (opentracing.Tracer, io.Closer) {
 	tracer, closer, err := cfg.New(
 		serviceName,
 		config.Logger(jaeger.StdLogger),
+		config.Injector(opentracing.HTTPHeaders, zipkinPropagator),
+		config.Extractor(opentracing.HTTPHeaders, zipkinPropagator),
+		config.ZipkinSharedRPCSpan(true),
 	)
 	if err != nil {
 		log.Fatal(err)
