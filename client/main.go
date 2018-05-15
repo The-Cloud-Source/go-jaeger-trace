@@ -19,13 +19,14 @@ import (
 var t opentracing.Tracer
 var closer io.Closer
 
-const port = ":8081"
-
+//const port = ":8081"
 // Traefik endpoint
 //const port = ":80"
+// nginx endpoint
+const port = ":88"
 
 func main() {
-	t, closer = tracer.New("client", "localhost:5775")
+	t, closer = tracer.New("client", "localhost:6831")
 	defer closer.Close()
 	opentracing.SetGlobalTracer(t)
 

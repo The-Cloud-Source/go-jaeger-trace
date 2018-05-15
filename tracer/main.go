@@ -37,5 +37,17 @@ func New(serviceName, hostPort string) (opentracing.Tracer, io.Closer) {
 		log.Fatal(err)
 	}
 
-	return tracer, closer
+	j_tracer, j_closer, j_err := cfg.New(
+		serviceName,
+		config.Logger(jaeger.StdLogger),
+	)
+	if j_err != nil {
+		log.Fatal(j_err)
+	}
+
+	if true {
+		return tracer, closer
+	} else {
+		return j_tracer, j_closer
+	}
 }

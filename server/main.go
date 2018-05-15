@@ -21,12 +21,12 @@ func redirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	t, closer := tracer.New("server", "localhost:5775")
+	t, closer := tracer.New("server", "localhost:6831")
 	defer closer.Close()
 	opentracing.SetGlobalTracer(t)
 
 	http.HandleFunc("/", index)
 	http.HandleFunc("/redirect", redirect)
-	fmt.Printf("listening to port *%s. press ctrl + c to cancel", port)
+	fmt.Printf("listening to port *%s. press ctrl + c to cancel\n\n", port)
 	http.ListenAndServe(port, nethttp.Middleware(opentracing.GlobalTracer(), http.DefaultServeMux))
 }
