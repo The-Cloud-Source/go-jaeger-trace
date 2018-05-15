@@ -3,6 +3,7 @@ package jaeger
 import (
 	"strconv"
 	"strings"
+	//"log"
 
 	opentracing "github.com/opentracing/opentracing-go"
 )
@@ -50,6 +51,7 @@ func (p Propagator) Extract(abstractCarrier interface{}) (SpanContext, error) {
 	}
 
 	if sc, err := p.uber.Extract(abstractCarrier); err == nil {
+		//log.Printf("Extracted from uber headers\n%+v\n", sc)
 		return sc, err
 	}
 
@@ -73,9 +75,11 @@ func (p Propagator) Extract(abstractCarrier interface{}) (SpanContext, error) {
 	})
 
 	if err != nil {
+		//log.Printf("ERR on B3 headers %+v\n", err)
 		return SpanContext{}, err
 	}
 	if traceID == 0 {
+		//log.Printf("traceID==0 on B3 headers %+v\n", err)
 		return SpanContext{}, opentracing.ErrSpanContextNotFound
 	}
 	return NewSpanContext(
